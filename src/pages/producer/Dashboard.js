@@ -3,15 +3,26 @@ import PriceChart from '../../components/PriceChart';
 import RECBalance from '../../components/RECBalance';
 import AddEnergy from '../../components/AddEnergy';
 import { useNavigate } from 'react-router-dom';
+import { auth} from "../firebase";
+import { toast } from "react-toastify";
 
 
 const ProducerDashboard = ({ setIsLoggedIn }) => {
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        setIsLoggedIn(false);
-        navigate('/');
-    };
+    async function handleLogout() {
+              try {
+                await auth.signOut();
+                navigate("/login");
+                toast.success("Logged out successfully", {
+                  position: "top-center",
+                });
+              } catch (error) {
+                toast.error("Error logging out: " + error.message, {
+                  position: "bottom-center",
+                });
+              }
+            }
     return (
         <div className="min-h-screen bg-gray-50 p-6">
             <div className="flex justify-between items-center mb-6">

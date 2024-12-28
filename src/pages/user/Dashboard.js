@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Gift, Star, Camera, Users, Award, TreeDeciduous, Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { auth} from "../firebase";
+import { toast } from "react-toastify";
 
-const UserDashboard = ({ setIsLoggedIn }) => {
+const UserDashboard = () => {
   const navigate = useNavigate();
   const [user] = useState({
     name: "Jane Cooper",
@@ -25,10 +27,19 @@ const UserDashboard = ({ setIsLoggedIn }) => {
     { title: 'Local Business Discount', points: 750, category: 'Partner', expiresIn: '20 days' }
   ];
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    navigate('/');
-  };
+  async function handleLogout() {
+          try {
+            await auth.signOut();
+            navigate("/login");
+            toast.success("Logged out successfully", {
+              position: "top-center",
+            });
+          } catch (error) {
+            toast.error("Error logging out: " + error.message, {
+              position: "bottom-center",
+            });
+          }
+        }
 
   const handleBillUpload = () => {
     // In real implementation, this would handle file upload and OCR processing

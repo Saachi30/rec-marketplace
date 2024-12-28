@@ -4,14 +4,25 @@ import MarketOverview from '../../components/MarketOverview';
 import CompanyProfile from '../../components/CompanyProfile';
 import RECTrade from '../../components/RECTrade';
 import TransactionHistory from '../../components/TransactionHistory';
+import { auth} from "../firebase";
+import { toast } from "react-toastify";
 
-const CompanyDashboard = ({ setIsLoggedIn }) => {
+const CompanyDashboard = () => {
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        setIsLoggedIn(false);
-        navigate('/');
-    };
+    async function handleLogout() {
+        try {
+          await auth.signOut();
+          navigate("/login");
+          toast.success("Logged out successfully", {
+            position: "top-center",
+          });
+        } catch (error) {
+          toast.error("Error logging out: " + error.message, {
+            position: "bottom-center",
+          });
+        }
+      }
     return (
         <div className="min-h-screen bg-gray-50 p-6">
             <div className="flex justify-between items-center mb-6">
