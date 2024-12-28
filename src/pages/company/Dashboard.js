@@ -1,0 +1,35 @@
+import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import MarketOverview from '../../components/MarketOverview';
+import CompanyProfile from '../../components/CompanyProfile';
+import RECTrade from '../../components/RECTrade';
+import TransactionHistory from '../../components/TransactionHistory';
+
+const CompanyDashboard = ({ setIsLoggedIn }) => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+        navigate('/');
+    };
+    return (
+        <div className="min-h-screen bg-gray-50 p-6">
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-2xl font-bold">Company Dashboard</h1>
+                <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                >
+                    Logout
+                </button>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <CompanyProfile />
+                <MarketOverview />
+                <RECTrade />
+                <TransactionHistory/>
+            </div>
+        </div>
+    );
+}
+export default CompanyDashboard;
