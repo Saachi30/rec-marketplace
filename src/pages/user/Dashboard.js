@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
-import { Gift, Star, Camera, Users, Award, TreeDeciduous, Upload } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { auth} from "../firebase";
+import React, { useState } from "react";
+import {
+  Gift,
+  Star,
+  Camera,
+  Users,
+  Award,
+  TreeDeciduous,
+  Upload,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
 import { toast } from "react-toastify";
 
 const UserDashboard = () => {
@@ -11,44 +19,80 @@ const UserDashboard = () => {
     email: "jane@example.com",
     greenPoints: 1500,
     achievements: [
-      { id: 1, title: "Early Adopter", description: "Joined the green energy movement" },
-      { id: 2, title: "Power Saver", description: "Reduced energy consumption by 20%" }
+      {
+        id: 1,
+        title: "Early Adopter",
+        description: "Joined the green energy movement",
+      },
+      {
+        id: 2,
+        title: "Power Saver",
+        description: "Reduced energy consumption by 20%",
+      },
     ],
     events: [
       { id: 1, title: "Community Solar Workshop", date: "2024-01-15" },
-      { id: 2, title: "Energy Saving Webinar", date: "2024-02-01" }
-    ]
+      { id: 2, title: "Energy Saving Webinar", date: "2024-02-01" },
+    ],
   });
 
   const rewards = [
-    { title: '10% Off Solar Installation', points: 2000, category: 'Premium', expiresIn: '30 days' },
-    { title: 'Digital Green Certificate', points: 1000, category: 'Standard', expiresIn: '15 days' },
-    { title: 'Tree Planting Badge', points: 500, category: 'Achievement', expiresIn: '45 days' },
-    { title: 'Local Business Discount', points: 750, category: 'Partner', expiresIn: '20 days' }
+    {
+      title: "10% Off Solar Installation",
+      points: 2000,
+      category: "Premium",
+      expiresIn: "30 days",
+    },
+    {
+      title: "Digital Green Certificate",
+      points: 1000,
+      category: "Standard",
+      expiresIn: "15 days",
+    },
+    {
+      title: "Tree Planting Badge",
+      points: 500,
+      category: "Achievement",
+      expiresIn: "45 days",
+    },
+    {
+      title: "Local Business Discount",
+      points: 750,
+      category: "Partner",
+      expiresIn: "20 days",
+    },
   ];
 
+  async function handleProfile() {
+    try {
+      navigate("/profile");
+    } catch (error) {
+      console.log("Error");
+    }
+  }
+
   async function handleLogout() {
-          try {
-            await auth.signOut();
-            navigate("/login");
-            toast.success("Logged out successfully", {
-              position: "top-center",
-            });
-          } catch (error) {
-            toast.error("Error logging out: " + error.message, {
-              position: "bottom-center",
-            });
-          }
-        }
+    try {
+      await auth.signOut();
+      navigate("/login");
+      toast.success("Logged out successfully", {
+        position: "top-center",
+      });
+    } catch (error) {
+      toast.error("Error logging out: " + error.message, {
+        position: "bottom-center",
+      });
+    }
+  }
 
   const handleBillUpload = () => {
     // In real implementation, this would handle file upload and OCR processing
-    alert('Bill upload functionality would be implemented here');
+    alert("Bill upload functionality would be implemented here");
   };
 
   const handleGridReturnUpload = () => {
     // In real implementation, this would handle grid return bill processing
-    alert('Grid return bill upload functionality would be implemented here');
+    alert("Grid return bill upload functionality would be implemented here");
   };
 
   return (
@@ -60,6 +104,12 @@ const UserDashboard = () => {
           className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
         >
           Logout
+        </button>
+        <button
+          onClick={handleProfile}
+          className="px-4 py-2 bg-green-400 text-white rounded-lg hover:bg-red-700"
+        >
+          Profile
         </button>
       </div>
 
@@ -75,10 +125,12 @@ const UserDashboard = () => {
               <p className="text-gray-600">{user.email}</p>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-2 mb-6">
             <Star className="w-5 h-5 text-green-600" />
-            <span className="text-xl font-bold">{user.greenPoints} Green Points</span>
+            <span className="text-xl font-bold">
+              {user.greenPoints} Green Points
+            </span>
           </div>
 
           <div className="space-y-4">
@@ -106,10 +158,12 @@ const UserDashboard = () => {
             <h2 className="text-xl font-bold">Achievements</h2>
           </div>
           <div className="space-y-4">
-            {user.achievements.map(achievement => (
+            {user.achievements.map((achievement) => (
               <div key={achievement.id} className="border rounded-lg p-4">
                 <h3 className="font-semibold">{achievement.title}</h3>
-                <p className="text-gray-600 text-sm">{achievement.description}</p>
+                <p className="text-gray-600 text-sm">
+                  {achievement.description}
+                </p>
               </div>
             ))}
           </div>
@@ -128,7 +182,9 @@ const UserDashboard = () => {
               <div key={index} className="border rounded-lg p-4">
                 <div className="flex justify-between items-center">
                   <h3 className="font-semibold">{reward.title}</h3>
-                  <span className="text-green-600 font-medium">{reward.points} pts</span>
+                  <span className="text-green-600 font-medium">
+                    {reward.points} pts
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-600 mt-2">
                   <span>{reward.category}</span>
@@ -146,7 +202,7 @@ const UserDashboard = () => {
             <h2 className="text-xl font-bold">Upcoming Events</h2>
           </div>
           <div className="space-y-4">
-            {user.events.map(event => (
+            {user.events.map((event) => (
               <div key={event.id} className="border rounded-lg p-4">
                 <h3 className="font-semibold">{event.title}</h3>
                 <p className="text-gray-600 text-sm">Date: {event.date}</p>

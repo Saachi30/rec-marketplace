@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import ProducerDB from './pages/producer/Dashboard';
 import CompaniesDB from './pages/company/Dashboard';
 import ConsumerDB from './pages/user/Dashboard';
+import Profile from './pages/profile'
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -109,6 +110,9 @@ const App = () => {
               <ConsumerDB />
             </ProtectedRoute>
           }
+        />
+        <Route
+        path='/profile' element={<Profile/>}
         />
          <Route
           path="*"

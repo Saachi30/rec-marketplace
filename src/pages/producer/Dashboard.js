@@ -7,8 +7,16 @@ import { auth} from "../firebase";
 import { toast } from "react-toastify";
 
 
-const ProducerDashboard = ({ setIsLoggedIn }) => {
+const ProducerDashboard = () => {
     const navigate = useNavigate();
+
+    async function handleProfile(){
+        try{
+            navigate('/profile')
+        }catch(error){
+            console.log("Error")
+        }
+    }
 
     async function handleLogout() {
               try {
@@ -32,6 +40,12 @@ const ProducerDashboard = ({ setIsLoggedIn }) => {
                     className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                 >
                     Logout
+                </button>
+                <button
+                    onClick={handleProfile}
+                    className="px-4 py-2 bg-green-400 text-white rounded-lg hover:bg-red-700"
+                >
+                    Profile
                 </button>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
