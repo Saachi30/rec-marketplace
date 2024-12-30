@@ -1,44 +1,173 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const articles = [
-  {
-    title: "5 Ways Renewable Energy is Transforming Agriculture",
-    excerpt: "Discover how renewable energy sources like solar and biogas are revolutionizing the agricultural sector, making it more sustainable and efficient.",
-  },
-  {
-    title: "The Role of Technology in Reducing Agricultural Waste",
-    excerpt: "Learn about cutting-edge technologies that help minimize waste in farming practices and promote circular economies.",
-  },
-  {
-    title: "Top 10 Crops Suitable for Biomass Energy Production",
-    excerpt: "Explore the most efficient crops for biomass energy production and their potential impact on renewable energy goals.",
-  },
-  {
-    title: "How to Create a Sustainable Farm with Green Energy",
-    excerpt: "A step-by-step guide to integrating green energy solutions into your farm operations to improve sustainability.",
-  },
-  {
-    title: "The Economics of Agricultural Waste Conversion",
-    excerpt: "Understand the financial benefits of converting agricultural waste into energy and how it can boost farmers' incomes.",
-  },
-  {
-    title: "Biogas Basics: Turning Farm Waste into Energy",
-    excerpt: "An introductory guide to biogas production from farm waste, highlighting its benefits and the steps involved.",
-  },
-];
+const Articles = () => {
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-const Articles = () => (
-  <section className="mb-12">
-    <h2 className="text-3xl font-bold mb-6">Latest Articles</h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {articles.map((article, i) => (
-        <article key={i} className="bg-white rounded-xl shadow-sm p-6">
-          <h3 className="text-xl font-bold mb-3">{article.title}</h3>
-          <p className="text-gray-600">{article.excerpt}</p>
-        </article>
-      ))}
-    </div>
-  </section>
-);
+  // Replace with your actual NewsAPI key
+  const NEWS_API_KEY = '63359b42fa2747aa8003ba68d9e0c9b7';
+  
+  // Keywords for the search query
+  const SEARCH_KEYWORDS = [
+    'sustainable energy ',
+    'renewable energy',
+    'solar energy',
+    'wind energy',
+    'energy productions',
+    'renewable energy sources',
+    'green energy',
+    'sustainable energy agriculture',
+    'renewable energy farming',
+    'agricultural waste energy',
+    'energy production companies',
+    'green energy agriculture',
+    'biomass energy farming'
+  ].join(' OR ');
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await axios.get('https://newsapi.org/v2/everything', {
+          params: {
+            q: SEARCH_KEYWORDS,
+            language: 'en',
+            sortBy: 'publishedAt',
+            pageSize: 6, // Match your current grid layout
+            apiKey: NEWS_API_KEY
+          }
+        });
+
+        // Transform the API response to match your article format
+        const formattedArticles = response.data.articles.map(article => ({
+          title: article.title,
+          excerpt: article.description,
+          url: article.url,
+          imageUrl: article.urlToImage,
+          source: article.source.name,
+          publishedAt: new Date(article.publishedAt).toLocaleDateString()
+        }));
+
+        setArticles(formattedArticles);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch articles. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchArticles();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="mb-12">
+        <h2 className="text-7xl font-extrabold mb-6">Latest Articles</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="bg-white rounded-xl shadow-sm p-6 animate-pulse">
+              <div className="h-48 bg-gray-200 rounded mb-4"></div>
+              <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="mb-12">
+        <h2 className="text-3xl font-bold mb-6">Latest Articles</h2>
+        <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl p-4">
+          {error}
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="mb-12">
+      <h2 className="text-3xl font-bold mb-6">Latest Articles</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {articles.map((article, i) => (
+          <article key={i} className="bg-white rounded-xl shadow-sm overflow-hidden">
+            {article.imageUrl && (
+              <img 
+                src={article.imageUrl} 
+                alt={article.title}
+                className="w-full h-48 object-cover"
+              />
+            )}
+            <div className="p-6">
+              <h3 className="text-xl font-bold mb-3">
+                <a 
+                  href={article.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-600 transition-colors"
+                >
+                  {article.title}
+                </a>
+              </h3>
+              <p className="text-gray-600 mb-4">{article.excerpt}</p>
+              <div className="flex justify-between items-center text-sm text-gray-500">
+                <span>{article.source}</span>
+                <span>{article.publishedAt}</span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+};
 
 export default Articles;
+
+// import React from 'react';
+
+// const articles = [
+//   {
+//     title: "5 Ways Renewable Energy is Transforming Agriculture",
+//     excerpt: "Discover how renewable energy sources like solar and biogas are revolutionizing the agricultural sector, making it more sustainable and efficient.",
+//   },
+//   {
+//     title: "The Role of Technology in Reducing Agricultural Waste",
+//     excerpt: "Learn about cutting-edge technologies that help minimize waste in farming practices and promote circular economies.",
+//   },
+//   {
+//     title: "Top 10 Crops Suitable for Biomass Energy Production",
+//     excerpt: "Explore the most efficient crops for biomass energy production and their potential impact on renewable energy goals.",
+//   },
+//   {
+//     title: "How to Create a Sustainable Farm with Green Energy",
+//     excerpt: "A step-by-step guide to integrating green energy solutions into your farm operations to improve sustainability.",
+//   },
+//   {
+//     title: "The Economics of Agricultural Waste Conversion",
+//     excerpt: "Understand the financial benefits of converting agricultural waste into energy and how it can boost farmers' incomes.",
+//   },
+//   {
+//     title: "Biogas Basics: Turning Farm Waste into Energy",
+//     excerpt: "An introductory guide to biogas production from farm waste, highlighting its benefits and the steps involved.",
+//   },
+// ];
+
+// const Articles = () => (
+//   <section className="mb-12">
+//     <h2 className="text-3xl font-bold mb-6">Latest Articles</h2>
+//     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//       {articles.map((article, i) => (
+//         <article key={i} className="bg-white rounded-xl shadow-sm p-6">
+//           <h3 className="text-xl font-bold mb-3">{article.title}</h3>
+//           <p className="text-gray-600">{article.excerpt}</p>
+//         </article>
+//       ))}
+//     </div>
+//   </section>
+// );
+
+// export default Articles;

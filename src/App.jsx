@@ -8,13 +8,16 @@ import Register from './pages/Register';
 import ProducerDB from './pages/producer/Dashboard';
 import CompaniesDB from './pages/company/Dashboard';
 import ConsumerDB from './pages/user/Dashboard';
-import Profile from './pages/profile'
+import Profile from './pages/Profile'
+import CompanyProfile from './pages/company/CompanyProfile';
+import ProducerProfile from './pages/producer/ProducerProfile';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
+
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -43,6 +46,43 @@ const ProtectedRoute = ({ children }) => {
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState(null);
+  // useEffect(() => {
+  //   // Inject Naker.io script dynamically
+  //   const script = document.createElement("script");
+  //   script.setAttribute("data-who", "💎 Made with naker.io 💎");
+  //   script.src =
+  //     "https://d23jutsnau9x47.cloudfront.net/back/v1.0.9/viewer.js";
+  //   script.setAttribute(
+  //     "data-option",
+  //     JSON.stringify({
+  //       environment: {
+  //         gradient: "radial",
+  //         sensitivity: 0.8,
+  //         colorStart: [59,130,246,1],
+  //         colorEnd: [68,188,112,1],
+  //       },
+  //       particle: {
+  //         life: 5,
+  //         power: 0.045,
+  //         texture:
+  //           "https://res.cloudinary.com/naker-io/image/upload/v1566560053/circle_05.png",
+  //         number: 101,
+  //         colorStart: [116, 129, 92, 0.13],
+  //         colorEnd: [198,188,107,0.94],
+  //         sizeStart: 1.57,
+  //         sizeEnd: 3.14,
+  //         direction1: { x: 100, y: 100, z: 100 },
+  //         direction2: { x: -100, y: -100, z: -100 },
+  //       },
+  //     })
+  //   );
+  //   document.body.appendChild(script);
+
+  //   return () => {
+  //     // Cleanup script on component unmount
+  //     document.body.removeChild(script);
+  //   };
+  // }, []);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -53,6 +93,8 @@ const App = () => {
   }, []);
 
   return (
+    // <div className="profile-container">
+    //    <div className="content">
     <BrowserRouter>
       {/* <nav className="p-4 bg-gray-100 shadow-sm">
         <ul className="flex space-x-4">
@@ -96,11 +138,30 @@ const App = () => {
           }
         />
         <Route
+        path='/producerprofile' element={<ProducerProfile/>}
+        />
+         <Route
+          path="*"
+          element={
+            <Navigate to="/" replace />
+          }
+        />
+
+        <Route
           path="/companiesDB"
           element={
             <ProtectedRoute>
               <CompaniesDB />
             </ProtectedRoute>
+          }
+        />
+        <Route
+        path='/companyprofile' element={<CompanyProfile/>}
+        />
+         <Route
+          path="*"
+          element={
+            <Navigate to="/" replace />
           }
         />
         <Route
@@ -123,6 +184,8 @@ const App = () => {
 
       </Routes>
     </BrowserRouter>
+    // </div>
+    // </div>
   );
 };
 

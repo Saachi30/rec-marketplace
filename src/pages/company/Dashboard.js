@@ -6,13 +6,14 @@ import RECTrade from '../../components/RECTrade';
 import TransactionHistory from '../../components/TransactionHistory';
 import { auth} from "../firebase";
 import { toast } from "react-toastify";
+import { AccountCircleOutlined as ProfileIcon } from "@mui/icons-material";
 
 const CompanyDashboard = () => {
     const navigate = useNavigate();
 
     async function handleProfile(){
         try{
-            navigate('/profile')
+            navigate('/companyprofile')
         }catch(error){
             console.log("Error")
         }
@@ -35,18 +36,15 @@ const CompanyDashboard = () => {
         <div className="min-h-screen bg-gray-50 p-6">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Company Dashboard</h1>
-                <button
-                    onClick={handleLogout}
-                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                >
-                    Logout
-                </button>
-                <button
-                    onClick={handleProfile}
-                    className="px-4 py-2 bg-green-400 text-white rounded-lg hover:bg-red-700"
-                >
-                    Profile
-                </button>
+                <div className="flex items-center gap-4 mr-6">
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            Logout
+          </button>
+          <ProfileIcon onClick={handleProfile} className="text-green-700 cursor-pointer" />
+        </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <CompanyProfile />

@@ -32,6 +32,7 @@ function Register() {
             userData = {
               ...userData,
               gst: gst,
+              creditScore: null,
               address: address,
               recBalances: [],
             };

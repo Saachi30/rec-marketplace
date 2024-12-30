@@ -5,7 +5,7 @@ const ChatBot = () => {
     const [input, setInput] = useState('');
   
     return (
-      <div className="fixed bottom-4 right-4 w-96 bg-white rounded-xl shadow-lg">
+      <div className="fixed bottom-4 right-4 w-3/4 bg-white rounded-xl shadow-lg">
         <div className="p-4 border-b">
           <h3 className="font-bold">Energy Advisor</h3>
         </div>
