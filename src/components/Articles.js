@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { motion } from 'framer-motion';
 const Articles = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,19 +40,19 @@ const Articles = () => {
         });
 
         // Transform the API response to match your article format
-        const formattedArticles = response.data.articles.map(article => ({
+        const formattedArticles = response.data.articles.map((article) => ({
           title: article.title,
           excerpt: article.description,
           url: article.url,
           imageUrl: article.urlToImage,
           source: article.source.name,
-          publishedAt: new Date(article.publishedAt).toLocaleDateString()
+          publishedAt: new Date(article.publishedAt).toLocaleDateString(),
         }));
 
         setArticles(formattedArticles);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch articles. Please try again later.');
+        setError("Failed to fetch articles. Please try again later.");
         setLoading(false);
       }
     };
@@ -60,13 +60,35 @@ const Articles = () => {
     fetchArticles();
   }, []);
 
+  const cardVariants = {
+    hidden: (index) => {
+      if (index % 3 === 0) return { opacity: 0, x: -150 }; // Left cards
+      if (index % 3 === 2) return { opacity: 0, x: 150 }; // Right cards
+      return { opacity: 0, y: -100 }; // Middle cards
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 60,
+        damping: 15,
+        delay: 0.2,
+      },
+    },
+  };
+
   if (loading) {
     return (
       <section className="mb-12">
         <h2 className="text-7xl font-extrabold mb-6">Latest Articles</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-white rounded-xl shadow-sm p-6 animate-pulse">
+            <div
+              key={i}
+              className="bg-white rounded-xl shadow-sm p-6 animate-pulse"
+            >
               <div className="h-48 bg-gray-200 rounded mb-4"></div>
               <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
               <div className="h-4 bg-gray-200 rounded w-1/2"></div>
@@ -93,19 +115,27 @@ const Articles = () => {
       <h2 className="text-3xl font-bold mb-6">Latest Articles</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.map((article, i) => (
-          <article key={i} className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <motion.article
+            key={i}
+            className="bg-white rounded-xl shadow-sm overflow-hidden transition-transform duration-100 hover:scale-110 hover:shadow-2xl hover:border-2 hover:border-gray-400"
+            custom={i}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={cardVariants}
+          >
             {article.imageUrl && (
-              <img 
-                src={article.imageUrl} 
+              <img
+                src={article.imageUrl}
                 alt={article.title}
                 className="w-full h-48 object-cover"
               />
             )}
             <div className="p-6">
               <h3 className="text-xl font-bold mb-3">
-                <a 
-                  href={article.url} 
-                  target="_blank" 
+                <a
+                  href={article.url}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-blue-600 transition-colors"
                 >
@@ -118,7 +148,7 @@ const Articles = () => {
                 <span>{article.publishedAt}</span>
               </div>
             </div>
-          </article>
+          </motion.article>
         ))}
       </div>
     </section>

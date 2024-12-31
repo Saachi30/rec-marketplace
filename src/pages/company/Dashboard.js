@@ -7,6 +7,8 @@ import TransactionHistory from '../../components/TransactionHistory';
 import { auth} from "../firebase";
 import { toast } from "react-toastify";
 import { AccountCircleOutlined as ProfileIcon } from "@mui/icons-material";
+import { IconButton } from '@mui/material';
+import LanguageIcon from '@mui/icons-material/Language';
 
 const CompanyDashboard = () => {
     const navigate = useNavigate();
@@ -44,6 +46,17 @@ const CompanyDashboard = () => {
             Logout
           </button>
           <ProfileIcon onClick={handleProfile} className="text-green-700 cursor-pointer" />
+           {/* Multilingual Icon */}
+           <IconButton
+              color="inherit"
+             
+              aria-controls="language-menu"
+              aria-haspopup="true"
+              className="hover:text-green-600 "
+            >
+              <LanguageIcon />
+            </IconButton>
+            
         </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

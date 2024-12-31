@@ -1,13 +1,21 @@
+
 import React, { useEffect, useState } from "react";
 import Articles from '../components/Articles';
 import FAQ from '../components/FAQ';
 import FarmerEducation from '../components/FarmerEducation';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+
+import { BsChatDots } from 'react-icons/bs'; // Using react-icons for a chat icon
 import { motion } from 'framer-motion';
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  
+  const [isChatBotVisible, setIsChatBotVisible] = useState(false);
+  const navigate = useNavigate();
+  const toggleChatBot = () => {
+    setIsChatBotVisible(!isChatBotVisible);
+  };
 
  
   useEffect(() => {
@@ -71,7 +79,7 @@ const Home = () => {
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-white">
             Make your energy trasactions
             <br /> 
-            <span className=" p-1 text-7xl font-bold text-green-700">Green</span> 
+            <span className=" p-1 text-7xl font-bold text-green-500">Green</span> 
           </h1>
         </motion.div>
 
@@ -90,10 +98,10 @@ const Home = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <button className="px-8 py-4 bg-violet-600/60 text-white rounded-full font-semibold hover:bg-violet-700 transform hover:scale-105 transition-all">
+          <button onClick={ navigate("/login")} className="px-8 py-4 bg-violet-600/60 text-white rounded-full font-semibold hover:bg-violet-700 transform hover:scale-105 transition-all">
             Get Started Now
           </button>
-          <button className="px-8 py-4 border-2 border-violet-500 text-violet-600 rounded-full font-semibold hover:bg-violet-500/60 transform hover:scale-105 transition-all">
+          <button onClick={ navigate("/login")} className="px-8 py-4 border-2 border-violet-500 text-violet-600 rounded-full font-semibold hover:bg-violet-500/60 transform hover:scale-105 transition-all">
             Learn More
           </button>
         </motion.div>
@@ -128,7 +136,8 @@ const Home = () => {
       </main>
       <Footer />
 
-      
+     
+     
       </div>
       
    

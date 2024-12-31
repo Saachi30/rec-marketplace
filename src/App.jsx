@@ -8,10 +8,11 @@ import Register from './pages/Register';
 import ProducerDB from './pages/producer/Dashboard';
 import CompaniesDB from './pages/company/Dashboard';
 import ConsumerDB from './pages/user/Dashboard';
-import Profile from './pages/profile'
+import Profile from './pages/Profile'
 import CompanyProfile from './pages/company/CompanyProfile';
 import ProducerProfile from './pages/producer/ProducerProfile';
 import FloatingChatButton from './components/FloatingChatButton';
+import GTranslate from './components/GTranslate';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -97,6 +98,7 @@ const App = () => {
     // <div className="profile-container">
     //    <div className="content">
     <BrowserRouter>
+    <GTranslate/>
       {/* <nav className="p-4 bg-gray-100 shadow-sm">
         <ul className="flex space-x-4">
         
