@@ -8,9 +8,10 @@ import Register from './pages/Register';
 import ProducerDB from './pages/producer/Dashboard';
 import CompaniesDB from './pages/company/Dashboard';
 import ConsumerDB from './pages/user/Dashboard';
-import Profile from './pages/Profile'
+import Profile from './pages/profile'
 import CompanyProfile from './pages/company/CompanyProfile';
 import ProducerProfile from './pages/producer/ProducerProfile';
+import FloatingChatButton from './components/FloatingChatButton';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -183,6 +184,7 @@ const App = () => {
         />
 
       </Routes>
+      <FloatingChatButton/>
     </BrowserRouter>
     // </div>
     // </div>
