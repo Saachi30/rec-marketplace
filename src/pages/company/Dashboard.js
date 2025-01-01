@@ -1,71 +1,113 @@
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import React from 'react';
+import { ethers } from 'ethers';
 import MarketOverview from '../../components/MarketOverview';
 import CompanyProfile from '../../components/CompanyProfile';
 import RECTrade from '../../components/RECTrade';
 import TransactionHistory from '../../components/TransactionHistory';
-import { auth} from "../firebase";
+import BuyerProfile from '../../components/BuyerProfile';
+import BuyHistory from '../../components/BuyerHistory';
+import SellHistory from '../../components/SellHistory';
+import { auth } from "../firebase";
 import { toast } from "react-toastify";
 import { AccountCircleOutlined as ProfileIcon } from "@mui/icons-material";
-import { IconButton } from '@mui/material';
-import LanguageIcon from '@mui/icons-material/Language';
+import BuyTokens from '../../components/BuyToken';
+import abi from "../../abi.json";
 
 const CompanyDashboard = () => {
     const navigate = useNavigate();
+    const [account, setAccount] = useState('');
+    const [contract, setContract] = useState(null);
 
-    async function handleProfile(){
-        try{
-            navigate('/companyprofile')
-        }catch(error){
-            console.log("Error")
-        }
-    }
+    useEffect(() => {
+        connectWallet();
+    }, []);
 
-    async function handleLogout() {
+    const connectWallet = async () => {
         try {
-          await auth.signOut();
-          navigate("/login");
-          toast.success("Logged out successfully", {
-            position: "top-center",
-          });
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                
+                // Replace with your deployed contract address
+                const contractAddress = "0xcBCC21F602A17a67b4c205a5FFD8b5f803E99Ca0";
+                const contractABI = abi; // Insert your contract ABI here
+                
+                const contract = new ethers.Contract(
+                    contractAddress,
+                    contractABI,
+                    signer
+                );
+                
+                setAccount(accounts[0]);
+                setContract(contract);
+                toast.success("Wallet connected successfully");
+            } else {
+                toast.error("Please install MetaMask");
+            }
         } catch (error) {
-          toast.error("Error logging out: " + error.message, {
-            position: "bottom-center",
-          });
+            toast.error("Error connecting wallet: " + error.message);
         }
-      }
+    };
+
+    const handleProfile = () => {
+        try {
+            navigate('/companyprofile');
+        } catch (error) {
+            console.log("Error");
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            await auth.signOut();
+            navigate("/login");
+            toast.success("Logged out successfully");
+        } catch (error) {
+            toast.error("Error logging out: " + error.message);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 p-6">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Company Dashboard</h1>
                 <div className="flex items-center gap-4 mr-6">
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-          >
-            Logout
-          </button>
-          <ProfileIcon onClick={handleProfile} className="text-green-700 cursor-pointer" />
-           {/* Multilingual Icon */}
-           <IconButton
-              color="inherit"
-             
-              aria-controls="language-menu"
-              aria-haspopup="true"
-              className="hover:text-green-600 "
-            >
-              <LanguageIcon />
-            </IconButton>
-            
-        </div>
+                    {!account ? (
+                        <button
+                            onClick={connectWallet}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            Connect Wallet
+                        </button>
+                    ) : (
+                        <span className="text-sm text-gray-600">
+                            {account.slice(0, 6)}...{account.slice(-4)}
+                        </span>
+                    )}
+                    <button
+                        onClick={handleLogout}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                        Logout
+                    </button>
+                    <ProfileIcon onClick={handleProfile} className="text-green-700 cursor-pointer" />
+                </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <CompanyProfile />
-                <MarketOverview />
-                <RECTrade />
-                <TransactionHistory/>
+                <BuyerProfile contract={contract} account={account} />
+                <MarketOverview contract={contract} account={account} />
+                <RECTrade contract={contract} account={account} />
+                <TransactionHistory contract={contract} account={account} />
+                <BuyHistory contract={contract} account={account} />
+                <SellHistory contract={contract} account={account} />
+                <BuyTokens contract={contract} account={account} />
             </div>
         </div>
     );
-}
+};
+
 export default CompanyDashboard;
