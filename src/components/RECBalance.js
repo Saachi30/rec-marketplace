@@ -1,12 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { CreditCard, TrendingUp, TrendingDown } from 'lucide-react';
 
-const RECBalance = () => {
-  const balances = [
-    { type: 'Solar', amount: 1250, change: '+12.5%', trend: 'up' },
-    { type: 'Wind', amount: 850, change: '-3.2%', trend: 'down' },
-    { type: 'Biomass', amount: 425, change: '+5.7%', trend: 'up' }
-  ];
+const RECBalance = ({ contract, account }) => {
+  const [balances, setBalances] = useState([
+    { type: 'Solar', amount: 0, change: '0%', trend: 'up' },
+    { type: 'Wind', amount: 0, change: '0%', trend: 'up' },
+    { type: 'Biomass', amount: 0, change: '0%', trend: 'up' }
+  ]);
+
+  const fetchBalances = async () => {
+    try {
+      const updatedBalances = await Promise.all(
+        balances.map(async (balance) => {
+          const amount = await contract.getBalanceByEnergyType(account, balance.type);
+          
+          return {
+            ...balance,
+            amount: Number(amount)
+            
+          };
+          
+        })
+      );
+      
+      setBalances(updatedBalances);
+    } catch (error) {
+      console.error("Error fetching balances:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (contract && account) {
+      fetchBalances();
+      const interval = setInterval(fetchBalances, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [contract, account]);
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-6">
