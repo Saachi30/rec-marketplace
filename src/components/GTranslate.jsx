@@ -53,56 +53,33 @@
 
 // export default GTranslate;
 
-
-import React, { useEffect } from 'react';
+// GTranslate.jsx
+import React, { useEffect } from "react";
 
 const GTranslate = () => {
   useEffect(() => {
-    // Function to initialize Google Translate
-    const initializeGoogleTranslate = () => {
-      if (window.google?.translate) {
-        new window.google.translate.TranslateElement(
-          {
-            pageLanguage: 'en',
-            includedLanguages: 'en,hi,gu,mr,ta,fr,ja,de,ru',
-            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-          },
-          'google_translate_element'
-        );
+    const addGoogleTranslateScript = () => {
+      if (!document.querySelector("#google-translate-script")) {
+        const script = document.createElement("script");
+        script.id = "google-translate-script";
+        script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+        script.async = true;
+        document.body.appendChild(script);
       }
     };
 
-    // Function to dynamically load Google Translate script
-    const loadGoogleTranslateScript = () => {
-      const scriptId = 'google-translate-script';
-      if (document.getElementById(scriptId)) {
-        initializeGoogleTranslate();
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.id = scriptId;
-      script.src = 'https://translate.google.com/translate_a/element.js?cb=initializeGoogleTranslate';
-      script.type = 'text/javascript';
-      script.async = true;
-
-      // Set callback function for Google Translate
-      window.initializeGoogleTranslate = initializeGoogleTranslate;
-
-      // Append script to the document head
-      document.head.appendChild(script);
+    window.googleTranslateElementInit = () => {
+      new window.google.translate.TranslateElement(
+        {
+          pageLanguage: "en", // Default language
+          includedLanguages: "en,hi,gu,mr,ta,fr,ja,de,ru,en,hi", // Add desired languages here
+          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+        },
+        "google_translate_element"
+      );
     };
 
-    loadGoogleTranslateScript();
-
-    // Cleanup function to remove the script and global callback
-    return () => {
-      delete window.initializeGoogleTranslate;
-      const script = document.getElementById('google-translate-script');
-      if (script) {
-        script.remove();
-      }
-    };
+    addGoogleTranslateScript();
   }, []);
 
   return (
@@ -111,13 +88,12 @@ const GTranslate = () => {
       style={{
         position: 'absolute',
         top: '3rem',
-        right: '0.5rem',
+        right: '0.2rem',
+        opacity: 0.5,
         zIndex: 1000,
         backgroundColor: 'white',
         borderRadius: '5px',
         padding: '0.5rem',
-        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
-        opacity: 0.1,
       }}
     ></div>
   );

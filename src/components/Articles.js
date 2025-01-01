@@ -5,60 +5,80 @@ const Articles = () => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  
   // Replace with your actual NewsAPI key
   const NEWS_API_KEY = '63359b42fa2747aa8003ba68d9e0c9b7';
   
-  // Keywords for the search query
-  const SEARCH_KEYWORDS = [
-    'sustainable energy ',
+  // Sustainability-related search terms (Random Selection)
+  const searchQueries = [
+    'sustainable energy',
     'renewable energy',
-    'solar energy',
-    'wind energy',
-    'energy productions',
-    'renewable energy sources',
+    // 'solar energy',
+    // 'wind energy',
+    'energy production',
     'green energy',
     'sustainable energy agriculture',
     'renewable energy farming',
     'agricultural waste energy',
     'energy production companies',
     'green energy agriculture',
-    'biomass energy farming'
-  ].join(' OR ');
-
+    'biomass energy farming',
+    'sustainable energy production',
+    'renewable energy production',
+    
+  ];
+  
+  // Function to fetch articles
+  const fetchArticles = async () => {
+    setLoading(true);
+    setError(null);
+  
+    try {
+      // Randomly select a search query
+      const randomQuery = searchQueries[Math.floor(Math.random() * searchQueries.length)];
+      
+      const response = await axios.get('https://newsapi.org/v2/everything', {
+        params: {
+          q: `${randomQuery} AND ( green energy OR sustainable energy OR renewable energy certificate OR agricultural waste energy )`,
+          language: 'en',
+          sortBy: 'publishedAt',
+          pageSize: 6, // Match your current grid layout
+          apiKey: NEWS_API_KEY
+        }
+      });
+  
+      // Filter and format the articles
+      const validArticles = response.data.articles.filter(article =>
+        article.urlToImage &&
+        article.title &&
+        article.description &&
+        !article.title.includes('[Removed]') &&
+        !article.description.includes('[Removed]')
+      ).map((article) => ({
+        title: article.title,
+        excerpt: article.description,
+        url: article.url,
+        imageUrl: article.urlToImage,
+        source: article.source.name,
+        publishedAt: new Date(article.publishedAt).toLocaleDateString(),
+      }));
+  
+      setArticles(validArticles.slice(0, 6)); // Limit to 6 articles
+    } catch (err) {
+      setError('Failed to fetch articles. Please try again later.');
+      console.error('News fetch error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Fetch news initially and set an interval to update every 30 minutes
   useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const response = await axios.get('https://newsapi.org/v2/everything', {
-          params: {
-            q: SEARCH_KEYWORDS,
-            language: 'en',
-            sortBy: 'publishedAt',
-            pageSize: 6, // Match your current grid layout
-            apiKey: NEWS_API_KEY
-          }
-        });
-
-        // Transform the API response to match your article format
-        const formattedArticles = response.data.articles.map((article) => ({
-          title: article.title,
-          excerpt: article.description,
-          url: article.url,
-          imageUrl: article.urlToImage,
-          source: article.source.name,
-          publishedAt: new Date(article.publishedAt).toLocaleDateString(),
-        }));
-
-        setArticles(formattedArticles);
-        setLoading(false);
-      } catch (err) {
-        setError("Failed to fetch articles. Please try again later.");
-        setLoading(false);
-      }
-    };
-
     fetchArticles();
+    const interval = setInterval(fetchArticles, 30 * 60 * 1000); // 30 minutes
+    return () => clearInterval(interval);
   }, []);
+  
 
   const cardVariants = {
     hidden: (index) => {

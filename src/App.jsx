@@ -8,7 +8,7 @@ import Register from './pages/Register';
 import ProducerDB from './pages/producer/Dashboard';
 import CompaniesDB from './pages/company/Dashboard';
 import ConsumerDB from './pages/user/Dashboard';
-import Profile from './pages/Profile'
+// import Profile from './pages/profile'
 import CompanyProfile from './pages/company/CompanyProfile';
 import ProducerProfile from './pages/producer/ProducerProfile';
 import FloatingChatButton from './components/FloatingChatButton';
@@ -175,15 +175,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-        path='/profile' element={<Profile/>}
-        />
-         <Route
-          path="*"
-          element={
-            <Navigate to="/" replace />
-          }
-        />
+       
 
       </Routes>
       <FloatingChatButton/>
