@@ -12,8 +12,8 @@ import { AccountCircleOutlined as ProfileIcon } from '@mui/icons-material';
 import abi from '../../abi.json';
 import TokenListings from '../../components/Listings';
 import ProducerManagement from '../../components/AddProducer';
-
-const CONTRACT_ADDRESS = "0xcBCC21F602A17a67b4c205a5FFD8b5f803E99Ca0"; // Replace with your deployed contract address
+import EnergyBalances from '../../components/EnergyBalances';
+const CONTRACT_ADDRESS = "0x037A372029C066599eAcbb18c7B9e74fe32D9565"; // Replace with your deployed contract address
 
 const ProducerDashboard = () => {
     const navigate = useNavigate();
@@ -140,6 +140,7 @@ const ProducerDashboard = () => {
                 )}
                 <TokenListings contract={contract} account={account} />
                 <ProducerManagement contract={contract} account={account} />
+                <EnergyBalances contract={contract} account={account} />
             </div>
         </div>
     );
