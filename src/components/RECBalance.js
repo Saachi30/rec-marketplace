@@ -3,9 +3,9 @@ import { CreditCard, TrendingUp, TrendingDown } from 'lucide-react';
 
 const RECBalance = ({ contract, account }) => {
   const [balances, setBalances] = useState([
-    { type: 'Solar', amount: 0, change: '0%', trend: 'up' },
-    { type: 'Wind', amount: 0, change: '0%', trend: 'up' },
-    { type: 'Biomass', amount: 0, change: '0%', trend: 'up' }
+    { type: 'solar', amount: 0, change: '0%', trend: 'up' },
+    { type: 'wind', amount: 0, change: '0%', trend: 'up' },
+    { type: 'biomass', amount: 0, change: '0%', trend: 'up' }
   ]);
 
   const fetchBalances = async () => {
@@ -48,7 +48,7 @@ const RECBalance = ({ contract, account }) => {
           <div key={i} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
             <div>
               <h4 className="font-semibold">{balance.type} RECs</h4>
-              <p className="text-2xl font-bold">{balance.amount.toLocaleString()}</p>
+              <p className="text-2xl font-bold">{balance.amount }</p>
             </div>
             <div className={`flex items-center ${
               balance.trend === 'up' ? 'text-green-600' : 'text-red-600'

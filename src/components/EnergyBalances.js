@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
 
 const EnergyBalances = ({ contract, account }) => {
   const [balances, setBalances] = useState([]);
@@ -7,28 +6,40 @@ const EnergyBalances = ({ contract, account }) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchBalances();
+    if (contract && account) {
+      fetchBalances();
+    }
   }, [contract, account]);
 
   const fetchBalances = async () => {
     try {
+      setLoading(true);
       const result = await contract.getBalanceInTokensByEnergyType(account);
       const formattedBalances = result.balances.map((balance, index) => ({
         energyType: result.energyTypes[index],
-        amount: ethers.utils.formatEther(balance)
+        amount: Number(balance.toString())
       }));
       setBalances(formattedBalances);
-      setLoading(false);
     } catch (err) {
-      setError('Failed to fetch balances');
+      console.error('Error fetching balances:', err);
+      setError('Failed to fetch balances. Please try again.');
+    } finally {
       setLoading(false);
     }
   };
 
+  if (!contract || !account) {
+    return (
+      <div className="p-4 text-center text-gray-600">
+        Please connect your wallet
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-32">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
       </div>
     );
   }
@@ -42,7 +53,7 @@ const EnergyBalances = ({ contract, account }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="bg-white rounded-lg shadow-md">
       <div className="px-6 py-4 border-b border-gray-200">
         <h2 className="text-lg font-semibold text-gray-900">Energy Type Balances</h2>
       </div>
@@ -54,8 +65,8 @@ const EnergyBalances = ({ contract, account }) => {
           <div className="space-y-4">
             {balances.map((balance, index) => (
               <div key={index} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
-                <div className="font-medium text-gray-900">{balance.energyType}</div>
-                <div className="text-gray-600">{parseFloat(balance.amount)*1000000000000000000} RECs</div>
+                <span className="font-medium text-gray-900">{balance.energyType}</span>
+                <span className="text-gray-600">{balance.amount} RECs</span>
               </div>
             ))}
           </div>
